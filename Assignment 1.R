@@ -58,9 +58,15 @@ typeof(B)
 
 # 8. Read in the .dta version and store in an object called angell_stata
 
+library(haven)
+angell_stata <- read_dta ("angell.dta")
+
 # 9. Read in the .txt version and store it in an object called angell_txt
 
+angell_txt <- read.table("angell.txt")
+
 # 10. Drop the first five observations in the angell_txt object
+
 
 # 11. Select columns 2 and 3 of the agell_stata object and store them in a new object called angell_small
 

@@ -64,32 +64,82 @@ angell_stata <- read_dta ("angell.dta")
 # 9. Read in the .txt version and store it in an object called angell_txt
 
 angell_txt <- read.table("angell.txt")
+View(angell_txt) #or head()
 
 # 10. Drop the first five observations in the angell_txt object
 
+angell_txt[-c(1:5), ]
 
 # 11. Select columns 2 and 3 of the agell_stata object and store them in a new object called angell_small
+
+angell_small <- angell_stata [, 2:3]
+head(angell_small)
+
 
 # R comes also with many built-in datasets. The "MASS" package, for example, comes with the "Boston" dataset
 # 12. Install the "MASS" package, load the package. Then, load the Boston dataset
 
+install.packages ("MASS")
+library(MASS)
+head (Boston)
+
 # 13. What is the type of the Boston object?
+
+typeof(Boston)
+
+#Boston object is a list.
 
 # 14. What is the class of the Boston object?
 
+class(Boston)
+
+#Boston object is a dataframe.
+
 ### Basic data summarizing and description
+
 # 15. How many of the suburbs in the Boston data set bound the Charles river?
+
+View(Boston)
+nrow(subset(Boston, chas ==1))
+
+#35 suburbs in the Boston data set bound the Charles River.
 
 # 16. Do any of the suburbs of Boston appear to have particularly high crime rates? Tax rates?
 # Pupil-teacher ratios? Comment on the range of each variable.
+
+#Crime rates
+
+summary(Boston$crim)
+
+
+#There might be suburbs of Boston with significant high crime rates as the variables ranges from 0 (minimum value) to 80 (maximum value).
+#The majority of the suburbs seem to have a per capita crime between 0 and 3, with significant outliers.
+
+#Tax rates
+
+summary((Boston$tax))
+
+#
+#Pupil-teacher rations
+
+summary(Boston$ptratio)
+
+#There seem not to  be suburbs of Boston with significant high pupil-teacher rations as the data ranges from 12.60 to 22.
 
 # 17. What is the median pupil-teacher ratio among the towns in this data set that
 # have a per capita crime rate larger than 1 ?
 
 
-### Functions
-# 18. Write a function that calculates the squareroot of an integer
+median(Boston$ptratio[which(Boston$crim > 1)])
 
+
+#The median pupil-teacher ratio is 20.2.
+
+
+### Functions
+# 18. Write a function that calculates the square root of an integer
+
+#mysqrt <- function(sqrt (x))
 
 # 19. Write a function that calculates 95% confidence intervals for a point estimate.
 # The function should be called "my_CI"

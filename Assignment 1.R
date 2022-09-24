@@ -22,7 +22,7 @@ A <- c("2", "3", "4", "5", "6", "7", "8")
 
 typeof(A)
 
-#Vector A is a  numeric vector.
+#Vector A is a character vector.
 
 # 3. Convert A into an integer vector
 
@@ -31,7 +31,7 @@ typeof(A_converted)
 
 # 4. Create an integer vector B containing the numbers one through ten
 
-B <- c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)
+B <- (1:10)
 B
 typeof(B)
 
@@ -43,9 +43,9 @@ typeof(C)
 
 # 6. Change the third value of B to "3.5"
 
-B <- replace(B, 3, "3.5")
-B
-typeof(B)
+B1 <- replace(B, 3, "3.5")
+B1
+typeof(B1)
 
 # 7. Did this affect the type of B? How?
 
@@ -58,7 +58,6 @@ typeof(B)
 
 # 8. Read in the .dta version and store in an object called angell_stata
 
-library(haven)
 angell_stata <- read_dta ("angell.dta")
 
 # 9. Read in the .txt version and store it in an object called angell_txt
@@ -69,6 +68,7 @@ View(angell_txt) #or head()
 # 10. Drop the first five observations in the angell_txt object
 
 angell_txt[-c(1:5), ]
+
 
 # 11. Select columns 2 and 3 of the agell_stata object and store them in a new object called angell_small
 
@@ -113,18 +113,20 @@ summary(Boston$crim)
 
 
 #There might be suburbs of Boston with significant high crime rates as the variables ranges from 0 (minimum value) to 80 (maximum value).
-#The majority of the suburbs seem to have a per capita crime between 0 and 3, with significant outliers.
+#The majority of the suburbs seem to have a per capita crime between 0 and 3, with significant high outliers.
 
 #Tax rates
 
 summary((Boston$tax))
 
-#
-#Pupil-teacher rations
+# In this case, there might be suburbs of Boston with significant low tax rates as the variables ranges from 187 (minimum value) to 711 (maximum value) and the mean is 408.2.
+#The outliers in this case are close to the minimum value.
+
+#Pupil-teacher ratios
 
 summary(Boston$ptratio)
 
-#There seem not to  be suburbs of Boston with significant high pupil-teacher rations as the data ranges from 12.60 to 22.
+#In this case, the range of the variable seems really normal, so pupil-teacher ratios in Boston are relatively distributed among the suburbs. There seem not to be outliers in this case.
 
 # 17. What is the median pupil-teacher ratio among the towns in this data set that
 # have a per capita crime rate larger than 1 ?
@@ -139,7 +141,17 @@ median(Boston$ptratio[which(Boston$crim > 1)])
 ### Functions
 # 18. Write a function that calculates the square root of an integer
 
-#mysqrt <- function(sqrt (x))
+square_root <- function(a) {
+  x <- a/2
+  while (TRUE) {
+    y <- (x + a / x) / 2
+    if (y == x) break
+    x <- y
+  }
+  return(y)
+}
+
+square_root(9)
 
 # 19. Write a function that calculates 95% confidence intervals for a point estimate.
 # The function should be called "my_CI"
@@ -149,6 +161,16 @@ median(Boston$ptratio[which(Boston$crim > 1)])
 # You may use the formula for 95% CI: point estimate +/- 1.96*standard error)
 # Pasting text in R: paste() and paste0()
 
+my_CI <- function(x, y) {
+  lower <- x - 1.96 * y
+  upper <- x + 1.96 * y
+  paste("The 95% CI upper bound of point estimate", x, "with standard error", y,
+        "is", upper,".", "The lower bound is", lower,".")
+}
+
+my_CI (2, 0.2)
+
+
 # 20. Write a function that converts all negative numbers in the following dataset into NA
 # Use as little code as possible and try to avoid code repetition
 set.seed(1002)
@@ -156,11 +178,23 @@ df <- data.frame(replicate(10, sample(c(1:10, c(-99,-98,-5)), 6, rep = TRUE)))
 names(df) <- letters[1:6]
 df
 
+class(df)
+
+fun <- function (x) {
+  x <- replace(x, x < 0, NA)
+  print(x)
+}
+
+fun(df)
 
 
 # 21. Use your function to convert all negative numbers in the dataset into NA without changing the class of the object
 
+#The class did not change with my function.
 
+class (df)
 
 # 22. Change the function you wrote above such that it turns any negative number into NA!
+
+#I already did this for q20.
 

@@ -120,7 +120,6 @@ summary(Boston$crim)
 summary((Boston$tax))
 
 # In this case, there might be suburbs of Boston with significant low tax rates as the variables ranges from 187 (minimum value) to 711 (maximum value) and the mean is 408.2.
-#The outliers in this case are close to the minimum value.
 
 #Pupil-teacher ratios
 

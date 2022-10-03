@@ -194,5 +194,5 @@ class (df)
 
 # 22. Change the function you wrote above such that it turns any negative number into NA!
 
-#I already did this for q20.
+#I already did this for q20. 
 

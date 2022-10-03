@@ -42,13 +42,19 @@ interest_city %>%
 Note that there might be multiple rows for each city if there were hits for both "crime" and "loans" in that city. It might be easier if we had the search hits info for both search terms in two separate variables. That is, each row would represent a unique city. Transform the `tibble` accordingly and save the result as a new object.
 
 ```{r}
-
+interest_city_w <- pivot_wider(interest_city, 
+                          names_from = keyword, na.rm = T, 
+                          values_from = hits, na.rm = T)
+interest_city_w 
 ```
 
 Which cities (locations) have the highest search frequency for `loans`? Print the first rows of the new `tibble` from the previous chunk, ordered by `loans`.
 
 ```{r}
+#?head
+#head(interest_city_w, order_by(loans))
 
+interest_city_w %>% arrange(desc(loans))
 ```
 
 Is there a relationship between the search intensities between the two keywords we used? Create a scatterplot of `crime` and `loans` with `qplot()`.

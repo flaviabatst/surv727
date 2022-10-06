@@ -43,24 +43,25 @@ Note that there might be multiple rows for each city if there were hits for both
 
 ```{r}
 interest_city_w <- pivot_wider(interest_city, 
-                          names_from = keyword, na.rm = T, 
-                          values_from = hits, na.rm = T)
+                          names_from = keyword, 
+                          values_from = hits)
 interest_city_w 
 ```
 
 Which cities (locations) have the highest search frequency for `loans`? Print the first rows of the new `tibble` from the previous chunk, ordered by `loans`.
 
 ```{r}
-#?head
-#head(interest_city_w, order_by(loans))
+interest_city_w %>% 
+  arrange(desc(loans))
 
-interest_city_w %>% arrange(desc(loans))
+#Riverton, Zion, Madison, and Robbin are the locations with the highest seach frequency for "loans".
 ```
 
 Is there a relationship between the search intensities between the two keywords we used? Create a scatterplot of `crime` and `loans` with `qplot()`.
 
 ```{r}
 
+qplot(crime, loans, data = interest_city_w)
 ```
 
 ## Google Trends + ACS
@@ -72,7 +73,7 @@ https://api.census.gov/data/key_signup.html
 Once you have an access key, store this key in the cs_key object. We will use this object in all following API queries.
 
 ```{r}
-cs_key <- "your key"
+cs_key <- "f2f207f9e8d30faf836a37450b39f4054c8b395a"
 ```
 
 In the following, we request basic socio-demographic information (population, median age, median household income, income per capita) for cities and villages in the state of Illinois.
@@ -96,21 +97,26 @@ acs_il[acs_il == -666666666] <- NA
 Now, it might be useful to rename the socio-demographic variables (`B01001_001E` etc.) in our data set and assign more meaningful names. 
 
 ```{r}
+
 acs_il <-
   acs_il %>%
   rename(pop = B01001_001E, age = B06002_001E, hh_income = B19013_001E, income = B19301_001E)
+
 ```
 
 Print the first rows of the variable `NAME`.
 
 ```{r}
 
+head(acs_il$NAME)
+
 ```
 
 It seems like we could try to use this location information listed above to merge this data set with the Google Trends data. However, we first have to clean `NAME` so that it has the same structure as `location` in the search interest by city data. Add a new variable `location` to the ACS data that only includes city names. 
 
 ```{r}
-
+acs_il2 <- acs_il %>% separate(NAME, c('location', 'NAME')) 
+acs_il2
 ```
 
 First, check how many cities don't appear in both data sets, i.e. cannot be matched.
@@ -122,18 +128,36 @@ First, check how many cities don't appear in both data sets, i.e. cannot be matc
 That's a lot, unfortunately. However, we can still try using the data. Create a new data set by joining the Google Trends and the ACS data. Keep only cities that appear in both data sets. 
 
 ```{r}
-
+merged_data<- inner_join(interest_city_w, acs_il2, by ='location')
+head(merged_data)
 ```
 
 Now we can utilize information from both data sources. As an example, print the `crime` and `loans` search popularity for the first ten cities in Illinois with the highest population (in 2016).
 
 ```{r}
-
+merged_data %>%
+  slice_max(pop, n = 10)
 ```
 
 Next, compute the mean of the search popularity for both keywords for cities that have an above average median household income and for those that have an below average median household income. When building your pipe, start with creating the grouping variable and then proceed with the remaining tasks.
 
 ```{r}
+
+merged_data$hh_income_level <- "Below hh income"
+
+merged_data$hh_income_level[which(merged_data$hh_income > 54379.19)] <- "Above hh income"
+
+mean_crime_hhincome <- merged_data %>%
+group_by(hh_income_level) %>%
+summarise(mean_crime = mean(crime, na.rm = TRUE))
+
+mean_loans_hhincome <- merged_data %>%
+group_by(hh_income_level) %>%
+summarise(mean_loans = mean(loans, na.rm = TRUE))
+
+mean_crime_hhincome
+mean_loans_hhincome
+
 
 ```
 
@@ -141,4 +165,7 @@ Is there a relationship between the median household income and the search popul
 
 ```{r}
 
+#There seems to have a weak positive relationship between household income and the search popularity of "loans".
+
+qplot(loans, hh_income, data=merged_data, , geom = c("point", "smooth")) 
 ```

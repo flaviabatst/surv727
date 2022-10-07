@@ -60,6 +60,7 @@ interest_city_w %>%
 Is there a relationship between the search intensities between the two keywords we used? Create a scatterplot of `crime` and `loans` with `qplot()`.
 
 ```{r}
+#There seems not to be a relationship between the search intensities of "loans" and "crime".
 
 qplot(crime, loans, data = interest_city_w)
 ```
@@ -145,7 +146,7 @@ Next, compute the mean of the search popularity for both keywords for cities tha
 
 merged_data$hh_income_level <- "Below hh income"
 
-merged_data$hh_income_level[which(merged_data$hh_income > 54379.19)] <- "Above hh income"
+merged_data$hh_income_level[which(merged_data$hh_income > 47625)] <- "Above hh income"
 
 mean_crime_hhincome <- merged_data %>%
 group_by(hh_income_level) %>%
@@ -165,7 +166,7 @@ Is there a relationship between the median household income and the search popul
 
 ```{r}
 
-#There seems to have a weak positive relationship between household income and the search popularity of "loans".
+#There seems to be a  positive but weak relationship between household income and the search popularity of "loans".
 
 qplot(loans, hh_income, data=merged_data, , geom = c("point", "smooth")) 
 ```

@@ -1,7 +1,11 @@
 ---
 title: "Fundamentals of Computing and Data Display"
 subtitle: "Assignment 2"
-output: html_notebook
+author: "Flavia Batista da Silva" 
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 ## Setup
@@ -117,7 +121,6 @@ It seems like we could try to use this location information listed above to merg
 
 ```{r}
 acs_il2 <- acs_il %>% separate(NAME, c('location', 'NAME')) 
-acs_il2
 ```
 
 First, check how many cities don't appear in both data sets, i.e. cannot be matched.

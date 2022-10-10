@@ -3,9 +3,9 @@ title: "Fundamentals of Computing and Data Display"
 subtitle: "Assignment 2"
 author: "Flavia Batista da Silva" 
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ## Setup
@@ -126,7 +126,8 @@ acs_il2 <- acs_il %>% separate(NAME, c('location', 'NAME'))
 First, check how many cities don't appear in both data sets, i.e. cannot be matched.
 
 ```{r}
-
+anti_join(interest_city_w, acs_il2, by = "location")
+#106 cities cannot be matched. 
 ```
 
 That's a lot, unfortunately. However, we can still try using the data. Create a new data set by joining the Google Trends and the ACS data. Keep only cities that appear in both data sets. 

@@ -98,10 +98,6 @@ for (i in east_areas){
   print(url)
 }
 
-# for(i in places_east) {
-#   url <- ...
-#   }
-# url
 ```
 
 Now, extend the loop and add the code that is needed to grab the population tables from each page. Add columns to the original table `pops` using `cbind()`.
@@ -110,25 +106,20 @@ Now, extend the loop and add the code that is needed to grab the population tabl
 
 for (i in east_areas){
   url <- paste0("https://en.wikipedia.org/wiki/", i)
-  src <- read_html(url)
-  pops <- cbind(url)
+  src <- html_text(url)
+  pops <- cbind(src)
 }
-          
            
-# for(i in places_east) {
-#   url <- ...
-#   ...
-# }
 ```
 
 Use `str()` on the final result.
 
 ```{r}
-
+str(pops)
 ```
 
 And print it.
 
 ```{r}
-
+print(pops)
 ```

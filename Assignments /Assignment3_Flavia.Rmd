@@ -55,7 +55,7 @@ hist_pop
 You will see that the table needs some additional formatting. We only want rows and columns with actual values (I called the table object `pop`).
 
 ```{r}
-pop <- hist_pop[2:10, -3]
+pop <- hist_pop[2:11, -3]
 pop
 ```
 
@@ -113,7 +113,7 @@ Now, extend the loop and add the code that is needed to grab the population tabl
 
 ```{r}
 
-a <- 1:9
+a <- 1:10
 population <- data.frame(a)
 
 for(i in east_areas$X3) {
@@ -127,12 +127,11 @@ for(i in east_areas$X3) {
    colnames(pop1)<- c("Census_Year", "Population", "Change")
    pop1<- pop1[-c(1,12), ]
    part<- data.frame(pop1)
-   population <- cbind(part, population)
-   population <- population[-10]
-   population_table <- cbind(population,pops)
-   population_table<-population_table[,-c(4,7,10)]
-   
+   population <- cbind(part,pops, population)
+  
 }
+
+population
 
 ```
 

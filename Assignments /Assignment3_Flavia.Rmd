@@ -62,22 +62,31 @@ pop
 That's it for this page. However, we may want to repeat this process for other community areas. The Wikipedia page https://en.wikipedia.org/wiki/Grand_Boulevard,_Chicago has a section on "Places adjacent to Grand Boulevard, Chicago" at the bottom. Can you find the corresponding table in the list of tables that you created earlier? Extract this table as a new object.
     
 ```{r}
-adj_places <- table_wiki [[3]]
+table_wiki
+adj_places <- table_wiki [[4]]
 adj_places
+
+#The fourth table is what we want. 
 ```
 
 Now, grab the community areas east of Grand Boulevard and save them as a character vector. Print the result.
 
 ```{r}
-east_areas <- adj_places [1, 1]
+east_areas <- adj_places [c(1,3,5), 3]
 east_areas
+
+#save as character 
+east_areas1 <- as.character(east_areas) 
+east_areas1
 ```
 
 We want to use this list to create a loop that extracts the population tables from the Wikipedia pages of these places. To make this work and build valid urls, we need to replace empty spaces in the character vector with underscores. This can be done with `gsub()`, or by hand.
 
 ```{r}
-east_areas <- gsub("\n", "_", east_areas) 
-east_areas
+
+east_areas$X3 <- gsub(" ", "_", east_areas$X3)
+print(east_areas$X3)
+
 ```
 
 The resulting vector should look like this:  
@@ -93,8 +102,8 @@ Build a small loop to test whether you can build valid urls using the vector of 
 
 ```{r}
 
-for (i in east_areas){
-  url <- paste0("https://en.wikipedia.org/wiki/", i)
+for (i in east_areas$X3){
+  url <- paste0("https://en.wikipedia.org/wiki/", i, sep = "")
   print(url)
 }
 
@@ -104,12 +113,27 @@ Now, extend the loop and add the code that is needed to grab the population tabl
 
 ```{r}
 
-for (i in east_areas){
-  url <- paste0("https://en.wikipedia.org/wiki/", i)
-  src <- html_text(url)
-  pops <- cbind(src)
+a <- 1:9
+population <- data.frame(a)
+
+for(i in east_areas$X3) {
+   url <- paste0("https://en.wikipedia.org/wiki/", i, sep="")
+   src <- read_html(url)
+   
+   datar <- html_table(src)
+   pop1 <- datar[[2]]
+   print(pop1)
+   pop1 <- pop1[,-3]
+   colnames(pop1)<- c("Census_Year", "Population", "Change")
+   pop1<- pop1[-c(1,12), ]
+   part<- data.frame(pop1)
+   population <- cbind(part, population)
+   population <- population[-10]
+   population_table <- cbind(population,pops)
+   population_table<-population_table[,-c(4,7,10)]
+   
 }
-           
+
 ```
 
 Use `str()` on the final result.

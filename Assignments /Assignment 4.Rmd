@@ -44,6 +44,8 @@ Show tables that are available.
 
 ```{r}
 dbListTables(con)
+
+#crime table is available
 ```
 
 ## SQL and dbplyr
@@ -56,30 +58,50 @@ Write a first query that counts the number of rows of the `crime` table in the y
 
 ```{sql connection= con}
 
+SELECT 2016, COUNTIF(*) as count_crime
+FROM crime
+
+#there are 7668437 rows in the table "crime". 
 ```
 
 Next, count the number of arrests grouped by `primary_type` in 2016. Note that is a somewhat similar task as above, with some adjustments on which rows should be considered. Sort the results, i.e. list the number of arrests in a descending order.
 
 ```{sql connection= con}
-
+SELECT 2016, COUNT(primary_type) as arrest_primary
+FROM crime
+GROUP BY primary_type
+ORDER BY COUNT(primary_type) DESC
 ```
 
 We can also use the `date` for grouping. Count the number of arrests grouped by hour of the day in 2016. You can extract the latter information from `date` via `EXTRACT(HOUR FROM date)`. Which time of the day is associated with the most arrests? 
 
 ```{sql connection= con}
+SELECT 2016, primary_type, EXTRACT(HOUR FROM date) 
+FROM crime
 
+#1
 ```
 
 Focus only on `HOMICIDE` and count the number of arrests for this incident type, grouped by year. List the results in descending order.
 
 ```{sql connection= con}
 
+SELECT primary_type,
+  COUNTIF(primary_type = "HOMICIDE") as count_homicide
+FROM crime
+GROUP BY year
+
 ```
 
 Find out which districts have the highest numbers of arrests in 2015 and 2016. That is, count the number of arrests in 2015 and 2016, grouped by year and district. Again, list the results in descending order (within year).
 
 ```{sql connection= con}
-
+SELECT primary_type,
+   COUNTIF(year = 2015) AS arrest_2015,
+      COUNTIF(year = 2016) AS arrest_2016,
+FROM crime
+GROUP BY district
+ORDER BY COUNT(primary_type) DESC
 ```
 
 Now, try to compute the difference between the number of arrests in 2016 and 2015 by district. Order the results such that the district with the highest decrease in arrests comes first.

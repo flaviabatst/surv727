@@ -153,7 +153,7 @@ Again, count the number of arrests grouped by `primary_type` of district 11 in y
 ```{r}
 
 crime %>% 
-  group_by(primary_type) %>%
+  dplyr:: group_by(primary_type) %>%
   filter(district==11 & year==2016 & arrest==TRUE)%>%
   summarize(count=n()) %>% 
   arrange(desc(count))
